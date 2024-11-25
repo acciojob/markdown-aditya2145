@@ -1,38 +1,38 @@
-{/* <p>Now I can render any React component on any DOM node I want using ReactDOM.render</p> */}
-import { useState, useEffect } from "react";
-import React from "react";
-import { marked } from "marked";
-import './../styles/App.css'
+import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+
+import '../styles/App.css';
+
+
 
 const App = () => {
+  const [markdown, setMarkdown] = useState('');
+  const [loading, setLoading] = useState(true);
 
-    const [markdown, setMarkdown] = useState('');
-    const [loading, setLoading] = useState(false);
-    
-    useEffect(() => {
-        setLoading(true)
-        setTimeout(() =>{
-            setLoading(false);
-        }, 2000)
-    }, [markdown])
+  useEffect(() => {
+    // Simulate a loading delay (optional)
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
 
-    const handleOnChange = (event) =>{
-        setMarkdown(event.target.value)
-    }
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
 
-    return (
-        <div className="app">
-            
-            <div className="textarea">
-                <textarea value={markdown} onChange={handleOnChange} placeholder="write your mark here"/>
-            </div>
+  return (
+    <div className="app">
+      <textarea
+        className="textarea"
+        value={markdown}
+        onChange={(e) => setMarkdown(e.target.value)}
+        placeholder="Write your markdown here..."
+      />
+      <div className="preview">
+        <ReactMarkdown>{markdown}</ReactMarkdown>
+      </div>
+    </div>
+  );
+};
 
-            <div className="preview">
-                {loading ? (<p className="loading">Loading...</p>)
-                : (<div dangerouslySetInnerHTML={{__html: marked(markdown)}}></div>)}
-            </div>
-        </div>
-    )
-}
-
-export default App
+export default App;
