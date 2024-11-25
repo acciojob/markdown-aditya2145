@@ -1,58 +1,38 @@
-import React, { useState, useEffect } from "react";
-import "../styles/App.css";
+{/* <p>Now I can render any React component on any DOM node I want using ReactDOM.render</p> */}
+import { useState, useEffect } from "react";
+import React from "react";
+import { marked } from "marked";
+import './../styles/App.css'
 
-function App() {
-  const [markdown, setMarkdown] = useState("# Hello Markdown!");
-  const [renderedHTML, setRenderedHTML] = useState("");
-  const [loading, setLoading] = useState(true);
+const App = () => {
 
-  const parseMarkdown = (text) => {
-    let parsedText = text;
+    const [markdown, setMarkdown] = useState('');
+    const [loading, setLoading] = useState(false);
+    
+    useEffect(() => {
+        setLoading(true)
+        setTimeout(() =>{
+            setLoading(false);
+        }, 2000)
+    }, [markdown])
 
-    parsedText = parsedText.replace(/^# (.*$)/gim, "<h1>$1</h1>");
-    parsedText = parsedText.replace(/^## (.*$)/gim, "<h2>$1</h2>");
-    parsedText = parsedText.replace(/^### (.*$)/gim, "<h3>$1</h3>");
-    parsedText = parsedText.replace(/\*\*(.*)\*\*/gim, "<b>$1</b>");
-    parsedText = parsedText.replace(/_(.*)_/gim, "<i>$1</i>");
-    // llknkn
-    parsedText = parsedText.replace(/\n/gim, "<br>");
+    const handleOnChange = (event) =>{
+        setMarkdown(event.target.value)
+    }
 
-    return parsedText;
-  };
+    return (
+        <div className="app">
+            
+            <div className="textarea">
+                <textarea value={markdown} onChange={handleOnChange} placeholder="write your mark here"/>
+            </div>
 
-  useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => {
-      setRenderedHTML(parseMarkdown(markdown));
-      setLoading(false);
-    }, 300); // Simulate loading state
-
-    return () => clearTimeout(timer);
-  }, [markdown]);
-
-  return (
-    <div className="app">
-      <div className="textarea">
-        <h2>Markdown Input</h2>
-        <textarea
-          value={markdown}
-          onChange={(e) => setMarkdown(e.target.value)}
-          rows="10"
-          cols="50"
-          placeholder="Write your markdown here..."
-        ></textarea>
-      </div>
-
-      <div className="preview">
-        <h2>Markdown Preview</h2>
-        {loading ? (
-          <p className="loading">Loading...</p>
-        ) : (
-          <div dangerouslySetInnerHTML={{ __html: renderedHTML }}></div>
-        )}
-      </div>
-    </div>
-  );
+            <div className="preview">
+                {loading ? (<p className="loading">Loading...</p>)
+                : (<div dangerouslySetInnerHTML={{__html: marked(markdown)}}></div>)}
+            </div>
+        </div>
+    )
 }
 
-export default App;
+export default App
