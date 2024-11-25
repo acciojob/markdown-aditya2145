@@ -3,19 +3,17 @@ import "../styles/App.css"
 
 const App = () => {
 
-    let [mark, setMark] = useState("")
+    const [mark, setMark] = useState('');
 
   return (
-    <div className='container'>
-        <div className='markdown'>
-            <input onChange={e=>setMark(e.target.value)} type='text'/>
-        </div>
-        <div className='display'>
-            {
-                mark && 
-                <p>{mark}</p>
-            }
-        </div>
+    <div className='app'>
+      <div className='preview'>
+        <textarea className='textarea' onChange={(e) => setMark(e.target.value)}></textarea>
+      </div>
+
+      <div className='loading'>
+        {mark}
+      </div>
     </div>
   )
 }
